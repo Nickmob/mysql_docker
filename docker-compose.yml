@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  mysql8:
+    image: mysql:8
+    container_name: mysql8
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD='NykArNq1'
+      - MYSQL_USER=super_user
+      - MYSQL_PASSWORD='NykArNq'
+      - MYSQL_DATABASE=super_db
+    volumes:
+      - oracle8:/var/lib/mysql
+      - /etc/mysql-cont:/etc/mysql/conf.d
+      - /home/db/dbinit:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    ports:
+      - "3307:3306"
+  maria10:
+    image: mariadb:10.11
+    container_name: maria10
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD='NykArNq1'
+      - MARIADB_USER=super_user
+      - MARIADB_PASSWORD='NykArNq'
+      - MARIADB_DATABASE=super_db
+    volumes:
+      - maria10:/var/lib/mysql
+      - /etc/maria-cont:/etc/mysql/conf.d
+      - /home/db/dbinit:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    ports:
+      - "3308:3306"
+  ps:
+    image: percona:ps-8
+    container_name: ps
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD='NykArNq1'
+      - MYSQL_USER=super_user
+      - MYSQL_PASSWORD='NykArNq'
+      - MYSQL_DATABASE=super_db
+    volumes:
+      - percona8:/var/lib/mysql
+      - /etc/percona-cont:/etc/my.cnf.d
+      - /home/db/dbinit:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    ports:
+      - "3309:3306"
+volumes:
+  oracle8:
+  maria10:
+  percona8:
+networks:
+  app-network:
+    driver: bridge
